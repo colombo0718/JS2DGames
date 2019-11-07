@@ -1,0 +1,19 @@
+<script src="https://unpkg.com/konva@4.0.0/konva.min.js"></script>
+<div id="cont"></div>
+<script>
+    var stage = new Konva.Stage({
+        container: 'cont',
+        width: 400,
+        height: 600
+    });
+    var layer = new Konva.Layer();
+    // stage.add(layer);
+    var rect1 = new Konva.Rect({
+        width: 100,
+        height: 50,
+        fill: 'green'
+    });
+    // add the shape to the layer
+    layer.add(rect1);
+    stage.add(layer);
+</script>
