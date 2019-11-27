@@ -9,30 +9,43 @@
     });
     // 建立圖層
     var layer = new Konva.Layer();
-        // 建立並加入草皮
-        var turf = new Konva.Rect({
-            width: 400,
-            height: 600,
-            fill: '#0a0'
-        });
-        layer.add(turf);
-        // 建立並加入馬路
-        var road = new Konva.Rect({
-            x:50,
-            width: 300,
-            height: 600,
-            fill: '#333'
-        });
-        layer.add(road);
-        // 建立並加入汽車
-        var car = new Konva.Rect({
-            x:100,
-            y:500,
-            width: 30,
-            height: 50,
-            fill: '#f00'
-        });
-        layer.add(car);
+    // 建立並加入草皮
+    var turf = new Konva.Rect({
+        width: 400,
+        height: 600,
+        fill: '#0a0'
+    });
+    layer.add(turf);
+    // 建立並加入馬路
+    var road = new Konva.Rect({
+        x:50,
+        width: 300,
+        height: 600,
+        fill: '#333'
+    });
+    layer.add(road);
+    // 建立並加入汽車
+    var car = new Konva.Rect({
+        x:100,
+        y:500,
+        width: 30,
+        height: 50,
+        fill: '#f00'
+    });
+    layer.add(car);
     // 舞台中加入圖層
     stage.add(layer);
+    // 汽車橫向平移
+    setInterval(function(){
+        // car.x(car.x()+1)
+        layer.draw()
+    },10)
+    // 按鍵按下反應
+    document.addEventListener('keypress',function(event){
+        console.log(event.key)
+        if(event.key=="a"){car.x(car.x()-5)}
+        if(event.key=="d"){car.x(car.x()+5)}   
+    })
+
+    
 </script>
