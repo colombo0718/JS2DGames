@@ -36,16 +36,31 @@
     // 舞台中加入圖層
     stage.add(layer);
     // 汽車橫向平移
+    var keyA,keyD
     setInterval(function(){
-        // car.x(car.x()+1)
+        if(keyD){car.x(car.x()+5)}
+        if(keyA){car.x(car.x()-5)}
         layer.draw()
     },10)
     // 按鍵按下反應
-    document.addEventListener('keypress',function(event){
-        console.log(event.key)
-        if(event.key=="a"){car.x(car.x()-5)}
-        if(event.key=="d"){car.x(car.x()+5)}   
-    })
 
     
+    document.addEventListener('keydown',function(event){
+        console.log(event.key)
+        if(event.key=="a"){keyA=1}
+        if(event.key=="d"){keyD=1}   
+    })
+    document.addEventListener('keyup',function(event){
+        console.log(event.key)
+        if(event.key=="a"){keyA=0}
+        if(event.key=="d"){keyD=0}   
+    })
+
+
+// #===#1^o+...+-1
+// | W |<W>:   :
+// |   | v :   :
+// #===#...+...+-0   
+// 3   2   1   0 
 </script>
+
