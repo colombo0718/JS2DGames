@@ -24,43 +24,62 @@
         fill: '#333'
     });
     layer.add(road);
-    // 建立並加入汽車
-    var car = new Konva.Rect({
+    // 加入玩家的紅車車
+    var redCar = new Konva.Rect({
         x:100,
         y:500,
         width: 30,
         height: 50,
         fill: '#f00'
     });
-    layer.add(car);
+    layer.add(redCar);
+    // 加入路人的藍車
+    var bluCar = new Konva.Rect({
+        x:200,
+        y:0,
+        width: 30,
+        height: 50,
+        fill: '#00f'
+    });
+    layer.add(bluCar);
     // 舞台中加入圖層
     stage.add(layer);
     // 汽車橫向平移
     var keyA,keyD
     setInterval(function(){
-        if(keyD){car.x(car.x()+5)}
-        if(keyA){car.x(car.x()-5)}
+        // 控制紅車
+        if(keyD){redCar.x(redCar.x()+5)}
+        if(keyA){redCar.x(redCar.x()-5)}
+
+        // 藍車移動
+        bluCar.y(bluCar.y()+5)
+        if(bluCar.y()>600){
+            bluCar.x(50+Math.random()*250)
+            bluCar.y(-50)
+        }
+
+        // 進入草皮
+        if(redCar.x()<50 || redCar.x()>320){
+            console.log('gress')
+        }
+
+        // 兩車碰撞
+        if(Math.abs(redCar.x()-bluCar.x())<30 && 
+           Math.abs(redCar.y()-bluCar.y())<50 ){
+            console.log('collision')
+        }
+
         layer.draw()
     },10)
     // 按鍵按下反應
-
-    
     document.addEventListener('keydown',function(event){
-        console.log(event.key)
-        if(event.key=="a"){keyA=1}
-        if(event.key=="d"){keyD=1}   
+        if(event.key=="a"){keyA=true}
+        if(event.key=="d"){keyD=true}   
     })
     document.addEventListener('keyup',function(event){
-        console.log(event.key)
-        if(event.key=="a"){keyA=0}
-        if(event.key=="d"){keyD=0}   
+        if(event.key=="a"){keyA=false}
+        if(event.key=="d"){keyD=false}   
     })
 
-
-// #===#1^o+...+-1
-// | W |<W>:   :
-// |   | v :   :
-// #===#...+...+-0   
-// 3   2   1   0 
 </script>
 
