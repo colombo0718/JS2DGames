@@ -46,6 +46,22 @@
     stage.add(layer);
     // 汽車橫向平移
     var keyA,keyD
+    // websocket
+    var ws = new WebSocket("ws://localhost:4200");
+            
+    ws.onmessage=function(rtn){
+        console.log(rtn.data)
+        if(rtn.data=="D"){
+            keyA=false
+            keyD=false
+            keyD=true
+        }else if(rtn.data=="A"){
+            keyA=false
+            keyD=false
+            keyA=true
+        }
+    }
+
     setInterval(function(){
         // 控制紅車
         if(keyD){redCar.x(redCar.x()+5)}
@@ -57,6 +73,9 @@
             bluCar.x(50+Math.random()*250)
             bluCar.y(-50)
         }
+
+        // console.log(redCar.x()+","+bluCar.x()+","+bluCar.y())
+        ws.send(redCar.x()+","+bluCar.x()+","+bluCar.y())
 
         // 進入草皮
         if(redCar.x()<50 || redCar.x()>320){
@@ -72,14 +91,14 @@
         layer.draw()
     },10)
     // 按鍵按下反應
-    document.addEventListener('keydown',function(event){
-        if(event.key=="a"){keyA=true}
-        if(event.key=="d"){keyD=true}   
-    })
-    document.addEventListener('keyup',function(event){
-        if(event.key=="a"){keyA=false}
-        if(event.key=="d"){keyD=false}   
-    })
+    // document.addEventListener('keydown',function(event){
+    //     if(event.key=="a"){keyA=true}
+    //     if(event.key=="d"){keyD=true}   
+    // })
+    // document.addEventListener('keyup',function(event){
+    //     if(event.key=="a"){keyA=false}
+    //     if(event.key=="d"){keyD=false}   
+    // })
 
 </script>
 
