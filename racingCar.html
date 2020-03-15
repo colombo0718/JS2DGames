@@ -1,5 +1,6 @@
 <script src="https://unpkg.com/konva@4.0.0/konva.min.js"></script>
 <div id="cont"></div>
+<div id="scor">press "SPACE" to start</div> 
 <script>
     // 建立舞台
     var stage = new Konva.Stage({
@@ -26,7 +27,7 @@
     layer.add(road);
     // 加入玩家的紅車車
     var redCar = new Konva.Rect({
-        x:100,
+        x:200,
         y:500,
         width: 30,
         height: 50,
@@ -47,58 +48,82 @@
     // 汽車橫向平移
     var keyA,keyD
     // websocket
-    var ws = new WebSocket("ws://localhost:4200");
+    // var ws = new WebSocket("ws://localhost:4200");
             
-    ws.onmessage=function(rtn){
-        console.log(rtn.data)
-        if(rtn.data=="D"){
-            keyA=false
-            keyD=false
-            keyD=true
-        }else if(rtn.data=="A"){
-            keyA=false
-            keyD=false
-            keyA=true
-        }
-    }
+    // ws.onmessage=function(rtn){
+    //     console.log(rtn.data)
+    //     if(rtn.data=="D"){
+    //         keyA=false
+    //         keyD=false
+    //         keyD=true
+    //     }else if(rtn.data=="A"){
+    //         keyA=false
+    //         keyD=false
+    //         keyA=true
+    //     }
+    // }
+    var endgame=true
 
     setInterval(function(){
-        // 控制紅車
-        if(keyD){redCar.x(redCar.x()+5)}
-        if(keyA){redCar.x(redCar.x()-5)}
+       
+        if(!endgame){
+            // 控制紅車
+            if(keyD){redCar.x(redCar.x()+5)}
+            if(keyA){redCar.x(redCar.x()-5)}
 
-        // 藍車移動
-        bluCar.y(bluCar.y()+5)
-        if(bluCar.y()>600){
+            // 藍車移動
+            bluCar.y(bluCar.y()+5)
+            if(bluCar.y()>600){
+                bluCar.x(50+Math.random()*250)
+                bluCar.y(-50)
+
+                score+=1
+                if(score==10){
+                    score+=100
+                    endgame=true
+                }
+                document.getElementById("scor").innerHTML="score="+score
+            }
+        
+            // 傳給websocket server
+            // console.log(redCar.x()+","+bluCar.x()+","+bluCar.y())
+            // ws.send(redCar.x()+","+bluCar.x()+","+bluCar.y())
+
+            // 進入草皮
+            if(redCar.x()<50 || redCar.x()>320){
+                console.log('gress')
+                score-=100
+                endgame=true
+            }
+
+            // 兩車碰撞
+            if(Math.abs(redCar.x()-bluCar.x())<30 && 
+            Math.abs(redCar.y()-bluCar.y())<50 ){
+                console.log('collision')
+                score-=100
+                endgame=true
+            }
+
+            layer.draw()
+        }
+    },10)
+    // 按鍵按下反應 
+    document.addEventListener('keydown',function(event){
+        if(endgame&&event.key==" "){
+            endgame=false
+            score=0
+            redCar.x(200)
             bluCar.x(50+Math.random()*250)
             bluCar.y(-50)
+            document.getElementById("scor").innerHTML="score="+score
         }
-
-        // console.log(redCar.x()+","+bluCar.x()+","+bluCar.y())
-        ws.send(redCar.x()+","+bluCar.x()+","+bluCar.y())
-
-        // 進入草皮
-        if(redCar.x()<50 || redCar.x()>320){
-            console.log('gress')
-        }
-
-        // 兩車碰撞
-        if(Math.abs(redCar.x()-bluCar.x())<30 && 
-           Math.abs(redCar.y()-bluCar.y())<50 ){
-            console.log('collision')
-        }
-
-        layer.draw()
-    },10)
-    // 按鍵按下反應
-    // document.addEventListener('keydown',function(event){
-    //     if(event.key=="a"){keyA=true}
-    //     if(event.key=="d"){keyD=true}   
-    // })
-    // document.addEventListener('keyup',function(event){
-    //     if(event.key=="a"){keyA=false}
-    //     if(event.key=="d"){keyD=false}   
-    // })
+        if(event.key=="a"){keyA=true}
+        if(event.key=="d"){keyD=true}   
+    })
+    document.addEventListener('keyup',function(event){
+        if(event.key=="a"){keyA=false}
+        if(event.key=="d"){keyD=false}   
+    })
 
 </script>
 
