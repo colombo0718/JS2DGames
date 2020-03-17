@@ -5,18 +5,22 @@ key="D"
 
 def message_back(client, server, message):
     print("Client(%d) said: %s" % (client['id'], message))
-    # server.send_message(client,"get")
-    redX = int(message.split(',')[0])
-    bluX = float(message.split(',')[1])
-    bluY = int(message.split(',')[2])
+    # 
+    rewd = int(message.split(',')[0])
+    redX = int(message.split(',')[1])
+    bluX = float(message.split(',')[2])
+    bluY = int(message.split(',')[3])
+    # 
+    state=str(round(redX/10))+','+str(int(round(bluX/10)))+','+str(round(bluY/10))
+    print("state ="+state)
     global key
     if redX <100 : 
         key="D"
     if redX >300 : 
         key="A"
-    print(key)
+    print("return "+key)
     server.send_message(client,key)
 
-server = WebsocketServer(4200, host='', loglevel=logging.INFO)
+server = WebsocketServer(4300, host='', loglevel=logging.INFO)
 server.set_fn_message_received(message_back)
 server.run_forever()

@@ -47,52 +47,42 @@
     stage.add(layer);
     // 汽車橫向平移
     var keyA,keyD
-    // websocket
-    // var ws = new WebSocket("ws://localhost:4200");
-            
-    // ws.onmessage=function(rtn){
-    //     console.log(rtn.data)
-    //     if(rtn.data=="D"){
-    //         keyA=false
-    //         keyD=false
-    //         keyD=true
-    //     }else if(rtn.data=="A"){
-    //         keyA=false
-    //         keyD=false
-    //         keyA=true
-    //     }
-    // }
+
+
+
+    // connect to websocket server 
+    var ws = new WebSocket("ws://localhost:4300");
+
+
     var endgame=true
+    var reward=0,score=0
 
     setInterval(function(){
        
         if(!endgame){
+            reward=0
             // 控制紅車
             if(keyD){redCar.x(redCar.x()+5)}
             if(keyA){redCar.x(redCar.x()-5)}
 
             // 藍車移動
             bluCar.y(bluCar.y()+5)
+            // pass a car 
             if(bluCar.y()>600){
                 bluCar.x(50+Math.random()*250)
                 bluCar.y(-50)
-
-                score+=1
+                reward=1
+                // win the game 
                 if(score==10){
-                    score+=100
+                    reward=100
                     endgame=true
                 }
-                document.getElementById("scor").innerHTML="score="+score
             }
         
-            // 傳給websocket server
-            // console.log(redCar.x()+","+bluCar.x()+","+bluCar.y())
-            // ws.send(redCar.x()+","+bluCar.x()+","+bluCar.y())
-
             // 進入草皮
             if(redCar.x()<50 || redCar.x()>320){
                 console.log('gress')
-                score-=100
+                reward=-100
                 endgame=true
             }
 
@@ -100,14 +90,35 @@
             if(Math.abs(redCar.x()-bluCar.x())<30 && 
             Math.abs(redCar.y()-bluCar.y())<50 ){
                 console.log('collision')
-                score-=100
+                reward=-100
                 endgame=true
             }
+            
 
+            // send reward and state data
+            score+=reward
+            // console.log(redCar.x()+","+bluCar.x()+","+bluCar.y())
+            ws.send(reward+","+redCar.x()+","+bluCar.x()+","+bluCar.y())
+            document.getElementById("scor").innerHTML="score="+score
             layer.draw()
         }
     },10)
-    // 按鍵按下反應 
+
+    // AI control
+    ws.onmessage=function(rtn){
+        console.log(rtn.data)
+        if(rtn.data=="D"){
+            keyA=false
+            keyD=false
+            keyD=true
+        }else if(rtn.data=="A"){
+            keyA=false
+            keyD=false
+            keyA=true
+        }
+    }
+
+    // human control 
     document.addEventListener('keydown',function(event){
         if(endgame&&event.key==" "){
             endgame=false
