@@ -101,6 +101,9 @@
             ws.send(reward+","+redCar.x()+","+bluCar.x()+","+bluCar.y())
             document.getElementById("scor").innerHTML="score="+score
             layer.draw()
+            if(endgame){
+                ws.send("endgame")
+            }
         }
     },10)
 
