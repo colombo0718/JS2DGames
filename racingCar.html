@@ -57,6 +57,7 @@
     var endgame=true
     var reward=0,score=0
     var ready=true
+    var gress=0,collision=0,pass=0
 
     setInterval(function(){
        
@@ -73,16 +74,18 @@
                 bluCar.x(50+Math.random()*250)
                 bluCar.y(-50)
                 reward=1
+                pass+=1
                 // win the game 
-                if(score==10){
-                    reward=100
-                    endgame=true
-                }
+                // if(score==10){
+                //     reward=100
+                //     endgame=true
+                // }
             }
         
             // 進入草皮
             if(redCar.x()<50 || redCar.x()>320){
                 console.log('gress')
+                gress+=1
                 reward=-100
                 endgame=true
             }
@@ -91,6 +94,7 @@
             if(Math.abs(redCar.x()-bluCar.x())<30 && 
             Math.abs(redCar.y()-bluCar.y())<50 ){
                 console.log('collision')
+                collision+=1
                 reward=-100
                 endgame=true
             }
@@ -98,7 +102,7 @@
 
             // send reward and state data
             score+=reward
-            document.getElementById("scor").innerHTML="score="+score
+            document.getElementById("scor").innerHTML="score="+score+", gress="+gress+", collision="+collision+", pass="+pass
             // console.log(redCar.x()+","+bluCar.x()+","+bluCar.y())
             if(ready){
                 ws.send(reward+","+redCar.x()+","+bluCar.x()+","+bluCar.y())
@@ -126,6 +130,13 @@
             keyA=false
             keyD=false
             keyA=true
+        }else if(rtn.data=="R"){
+            endgame=false
+            score=0
+            redCar.x(200)
+            bluCar.x(50+Math.random()*250)
+            bluCar.y(-50)
+            document.getElementById("scor").innerHTML="score="+score
         }
     }
 

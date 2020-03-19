@@ -17,24 +17,30 @@ print(qTable)
 
 def message_back(client, server, message):
     global actions,lr,gamma,epsilon,qTable,action,state
+    # get client data
     print("Client(%d) said: %s" % (client['id'], message))
+
+    # game paused 
     if message=="endgame":
         print(qTable)
+        # restart the game 
+        server.send_message(client,'R')
         return 0
 
-    # 
+    # analysis 
     rewd = int(message.split(',')[0])
     redX = int(message.split(',')[1])
     bluX = float(message.split(',')[2])
     bluY = int(message.split(',')[3])
-    # 
-    stateNew=str(round(redX/100))+','+str(int(round(bluX/100)))+','+str(round(bluY/100))
+
+    # transform to simple state string
+    stateNew=str(round(redX/50))+','+str(int(round(bluX/100)))+','+str(round(bluY/100))
     print(" s: "+state+" a: "+action+' r: '+str(rewd)+" s_: "+stateNew)
     # check state exist
     if stateNew not in qTable.index :
         qTable=qTable.append(pd.Series([0,0,0],index=qTable.columns,name=stateNew))
     print("state ="+stateNew)
-    # learn
+    # learn this experience
     predict=qTable.loc[state, action]
     if abs(rewd)==100:  #end game
         target = rewd
@@ -51,6 +57,8 @@ def message_back(client, server, message):
 
     print("return "+action)
     print('-------------------------')
+
+    # sent action signal to client 
     server.send_message(client,action)
 
     state=stateNew
