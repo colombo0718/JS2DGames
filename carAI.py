@@ -3,17 +3,20 @@ from websocket_server import WebsocketServer
 import numpy as np
 import pandas as pd
 
-key="D"
+
 actions=['A','S','D']
+lr=0.01
+gamma=0.9
+epsilon=0.9
 qTable=pd.DataFrame(columns=actions)
-print(qTable,qTable.columns)
-# state="0,0,0"
-# print(state in qTable.columns)
-# qTable=qTable.append(pd.Series([0,0,0],index=qTable.columns,name=state))
-# print(qTable)
+action='S'
+state='0,0,0'
+qTable=qTable.append(pd.Series([0,0,0],index=qTable.columns,name=state))
+
+print(qTable)
 
 def message_back(client, server, message):
-    global qTable
+    global actions,lr,gamma,epsilon,qTable,action,state
     print("Client(%d) said: %s" % (client['id'], message))
     if message=="endgame":
         print(qTable)
@@ -25,18 +28,33 @@ def message_back(client, server, message):
     bluX = float(message.split(',')[2])
     bluY = int(message.split(',')[3])
     # 
-    state=str(round(redX/10))+','+str(int(round(bluX/10)))+','+str(round(bluY/10))
-    print("state ="+state)
-    global key
-    if redX <100 : 
-        key="D"
-    if redX >300 : 
-        key="A"
-    print("return "+key)
-    server.send_message(client,key)
+    stateNew=str(round(redX/100))+','+str(int(round(bluX/100)))+','+str(round(bluY/100))
+    print(" s: "+state+" a: "+action+' r: '+str(rewd)+" s_: "+stateNew)
+    # check state exist
+    if stateNew not in qTable.index :
+        qTable=qTable.append(pd.Series([0,0,0],index=qTable.columns,name=stateNew))
+    print("state ="+stateNew)
+    # learn
+    predict=qTable.loc[state, action]
+    if abs(rewd)==100:  #end game
+        target = rewd
+    else :
+        target = rewd+gamma*qTable.loc[stateNew,:].max()
+    qTable.loc[state, action]+=lr*(target-predict)
 
-    if state not in qTable.index :
-        qTable=qTable.append(pd.Series([0,0,0],index=qTable.columns,name=state))
+    #  choose action
+    if np.random.uniform() < epsilon:
+        state_action = qTable.loc[stateNew, :]
+        action = np.random.choice(state_action[state_action == np.max(state_action)].index)
+    else:
+        action = np.random.choice(actions)
+
+    print("return "+action)
+    print('-------------------------')
+    server.send_message(client,action)
+
+    state=stateNew
+    
 
 server = WebsocketServer(4300, host='', loglevel=logging.INFO)
 server.set_fn_message_received(message_back)

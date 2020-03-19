@@ -56,6 +56,7 @@
 
     var endgame=true
     var reward=0,score=0
+    var ready=true
 
     setInterval(function(){
        
@@ -97,9 +98,15 @@
 
             // send reward and state data
             score+=reward
-            // console.log(redCar.x()+","+bluCar.x()+","+bluCar.y())
-            ws.send(reward+","+redCar.x()+","+bluCar.x()+","+bluCar.y())
             document.getElementById("scor").innerHTML="score="+score
+            // console.log(redCar.x()+","+bluCar.x()+","+bluCar.y())
+            if(ready){
+                ws.send(reward+","+redCar.x()+","+bluCar.x()+","+bluCar.y())
+                ready=false
+            }else{
+                console.log('no')
+            }
+
             layer.draw()
             if(endgame){
                 ws.send("endgame")
@@ -109,6 +116,7 @@
 
     // AI control
     ws.onmessage=function(rtn){
+        ready=true
         console.log(rtn.data)
         if(rtn.data=="D"){
             keyA=false
