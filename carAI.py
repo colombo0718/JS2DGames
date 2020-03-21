@@ -8,10 +8,11 @@ actions=['A','S','D']
 lr=0.01
 gamma=0.9
 epsilon=0.9
-qTable=pd.DataFrame(columns=actions)
+# qTable=pd.DataFrame(columns=actions)
+qTable=pd.read_csv("qTable.csv",index_col='Unnamed: 0')
 action='S'
 state='0,0,0'
-qTable=qTable.append(pd.Series([0,0,0],index=qTable.columns,name=state))
+# qTable=qTable.append(pd.Series([0,0,0],index=qTable.columns,name=state))
 
 print(qTable)
 
@@ -23,6 +24,7 @@ def message_back(client, server, message):
     # game paused 
     if message=="endgame":
         print(qTable)
+        qTable.to_csv('qTable.csv')
         # restart the game 
         server.send_message(client,'R')
         return 0
