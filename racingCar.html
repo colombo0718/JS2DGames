@@ -48,11 +48,8 @@
     // 汽車橫向平移
     var keyA,keyD
 
-
-
     // connect to websocket server 
     var ws = new WebSocket("ws://localhost:4300");
-
 
     var endgame=true
     var reward=0,score=0
@@ -91,13 +88,13 @@
             }
 
             // 兩車碰撞
-            if(Math.abs(redCar.x()-bluCar.x())<30 && 
-            Math.abs(redCar.y()-bluCar.y())<50 ){
-                console.log('collision')
-                collision+=1
-                reward=-100
-                endgame=true
-            }
+            // if(Math.abs(redCar.x()-bluCar.x())<30 && 
+            // Math.abs(redCar.y()-bluCar.y())<50 ){
+            //     console.log('collision')
+            //     collision+=1
+            //     reward=-100
+            //     endgame=true
+            // }
             
 
             // send reward and state data
