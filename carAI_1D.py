@@ -7,7 +7,7 @@ import pandas as pd
 actions=['A','S','D']
 lr=0.01
 gamma=0.9
-epsilon=0.9
+epsilon=0.7
 
 action='S'
 state='0_'
@@ -35,7 +35,7 @@ def message_back(client, server, message):
 
     # analysis 
     rewd = int(message.split(',')[0])
-    redX = int(message.split(',')[1])
+    redX = float(message.split(',')[1])
     bluX = float(message.split(',')[2])
     bluY = int(message.split(',')[3])
 

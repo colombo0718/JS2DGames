@@ -142,7 +142,7 @@
         if(endgame&&event.key==" "){
             endgame=false
             score=0
-            redCar.x(200)
+            redCar.x(50+Math.random()*250)
             bluCar.x(50+Math.random()*250)
             bluCar.y(-50)
             document.getElementById("scor").innerHTML="score="+score
