@@ -1,0 +1,75 @@
+<script src="https://unpkg.com/konva@4.0.0/konva.min.js"></script>
+<div id="cont" style="height: 600px; width: 150px;"></div>
+<script>
+    var stage = new Konva.Stage({
+        container: 'cont',
+        width: 150,
+        height: 600
+    });
+    var layer = new Konva.Layer();
+    var man = new Konva.Group({
+        x:50,y:250
+    });
+    // 建立並加入草皮
+    for(var j=1;j<10;j++){
+        var rect = new Konva.Rect({
+            x: 50,
+            y: j*50,
+            width: 50,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 1,
+        });
+        layer.add(rect);
+    }
+
+    //加入人偶
+    var head = new Konva.Circle({
+        x: 25,
+        y: 12,
+        radius: 7,
+        fill: 'red',
+        stroke: 'black',
+        strokeWidth: 1,
+    });
+    man.add(head)
+    var body = new Konva.Wedge({
+        x: 25,
+        y: 45,
+        radius: 25,
+        angle: 40,
+        fill: 'red',
+        stroke: 'black',
+        strokeWidth: 1,
+        rotation: -110,
+    });
+    man.add(body)
+    layer.add(man);
+
+    var star = new Konva.Star({
+        x: 50+25,
+        y: 50+25,
+        numPoints: 6,
+        innerRadius: 8,
+        outerRadius: 14,
+        fill: 'yellow',
+        stroke: 'black',
+        strokeWidth: 1,
+    });
+    layer.add(star);
+
+    var hole = new Konva.Rect({
+        x: 50+10,
+        y: 450+10,
+        width: 30,
+        height: 30,
+        fill: 'gray',
+        stroke: 'black',
+        strokeWidth: 1,
+    });
+    layer.add(hole);
+
+    stage.add(layer);
+
+</script>
