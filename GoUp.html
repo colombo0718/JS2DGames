@@ -1,6 +1,28 @@
+<html>
+<head>
 <script src="https://unpkg.com/konva@4.0.0/konva.min.js"></script>
-<div id="cont" style="height: 600px; width: 150px;"></div>
+<style>
+    #cont{
+        height: 550px; width: 150px;
+    }
+    #info{
+        font-size: 20;
+        font-family:monospace;
+        position: absolute;
+        top:0px;left:150px;
+        height: 550px; width: 150px;
+    }
+</style>
+</head>
+<body>
+<div id="cont"></div>
+<div id="info">
+    reward:<text id='rew'>0</text><br>
+    score:<text id='sco'>0</text><br>
+    end:<text id='end'>false</text>
+    </div>
 <script>
+    // 景物建構
     var stage = new Konva.Stage({
         container: 'cont',
         width: 150,
@@ -23,8 +45,30 @@
         });
         layer.add(rect);
     }
-
-    //加入人偶
+    // 星星寶藏
+    var star = new Konva.Star({
+        x: 50+25,
+        y: 50+25,
+        numPoints: 6,
+        innerRadius: 8,
+        outerRadius: 14,
+        fill: 'yellow',
+        stroke: 'black',
+        strokeWidth: 1,
+    });
+    layer.add(star);
+    // 黑暗地洞
+        var hole = new Konva.Rect({
+        x: 50+10,
+        y: 450+10,
+        width: 30,
+        height: 30,
+        fill: 'gray',
+        stroke: 'black',
+        strokeWidth: 1,
+    });
+    layer.add(hole);
+    //加入人偶的頭
     var head = new Konva.Circle({
         x: 25,
         y: 12,
@@ -34,6 +78,7 @@
         strokeWidth: 1,
     });
     man.add(head)
+    //加入人偶的身體
     var body = new Konva.Wedge({
         x: 25,
         y: 45,
@@ -46,30 +91,45 @@
     });
     man.add(body)
     layer.add(man);
-
-    var star = new Konva.Star({
-        x: 50+25,
-        y: 50+25,
-        numPoints: 6,
-        innerRadius: 8,
-        outerRadius: 14,
-        fill: 'yellow',
-        stroke: 'black',
-        strokeWidth: 1,
-    });
-    layer.add(star);
-
-    var hole = new Konva.Rect({
-        x: 50+10,
-        y: 450+10,
-        width: 30,
-        height: 30,
-        fill: 'gray',
-        stroke: 'black',
-        strokeWidth: 1,
-    });
-    layer.add(hole);
-
     stage.add(layer);
 
+    //遊戲機制
+    var reward=0,score=0;end=false
+
+    var updateInfo = function(){
+        score+=reward
+        document.getElementById('rew').innerHTML=reward
+        document.getElementById('sco').innerHTML=score
+        document.getElementById('end').innerHTML=end
+        reward=0
+    }
+
+    var resetGame=function(){
+        score=0;end=false
+        man.y(250)
+    }
+
+    document.addEventListener('keydown',function(event){
+        console.log(event.key)
+        var key=event.key
+        if(end==true && key==' '){
+            resetGame()
+        }
+        if(end==true){return 0} //遊戲停止就不能動了
+
+        if(key=='ArrowUp' || key=='w'){
+            man.y(man.y()-50)
+            reward=-1
+        }else if(key=='ArrowDown' || key=='s'){
+            man.y(man.y()+50)
+            reward=1
+        }
+
+        if(man.y()==450){reward=-10;end=true}
+        if(man.y()==50){reward=10;end=true}
+        updateInfo()
+        stage.batchDraw()
+    })
 </script>
+</body>
+</html>
