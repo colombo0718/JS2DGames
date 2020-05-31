@@ -12,6 +12,13 @@
         top:0px;left:150px;
         height: 650px; width: 250px;
     }
+    #ctrl{
+        font-size: 20;
+        font-family:monospace;
+        position: absolute;
+        top:0px;left:400px;
+        height: 650px; width: 150px;
+    }
 </style>
 </head>
 <body>
@@ -23,7 +30,11 @@
     reward:<text id='rew'>0</text><br>
     score:<text id='sco'>0</text><br>
     end:<text id='end'>false</text>
-    </div>
+</div>
+<div id="ctrl">
+    [Control]<br>
+    <input type="button" value="start" onclick="ws.send('');resetGame()"></input>
+</div>
 <script>
     // [景物建置]
     var stage = new Konva.Stage({
@@ -99,97 +110,66 @@
     stage.add(layer);
 
     // [遊戲機制]
-    var state='[0]',action,reward=0,score=0;end=true
+    var state=0,action,reward=0,score=0
 
     man.height=function(){
         return -1*(man.y()-300)/50
     }
-    man.up=function(){
-        action='w'
-        man.y(man.y()-50)
-    }
-    man.down=function(){
-        action='s'
-        man.y(man.y()+50)
+
+    var mainProcedure=function(){
+        reward=0
+        if( action=='x'){
+            // state='end'
+            resetGame()
+        }
+        if(state=='end'){return 0}
+
+        if(action=='w'){
+            man.y(man.y()-50)
+            reward=-1
+        }else if(action=='s'){
+            man.y(man.y()+50)
+            reward=1
+        }
+        score+=reward
+        state=man.height()
+        if(man.y()==550){reward=-10;state="end"}
+        if(man.y()==50){reward=10;state="end"}
+        stage.batchDraw()
+        updateInfo()
     }
 
     var updateInfo = function(){
-        score+=reward
-        state="["+man.height()+"]"
-        state=man.height()
         document.getElementById('sta').innerHTML=state
         document.getElementById('act').innerHTML=action
         document.getElementById('rew').innerHTML=reward
         document.getElementById('sco').innerHTML=score
         document.getElementById('end').innerHTML=end
-        reward=0
     }
 
     var resetGame=function(){
-        action=" "
-        score=0;end=false
+        score=0
+        state=0
         man.y(300)
     }
 
     document.addEventListener('keydown',function(event){
-        // console.log(event.key)
-        var key=event.key
-        if(end=true && key==' '){
-            ws.send(state)
-            resetGame()
-        }
-        if(end==true){
-            return 0
-        } //遊戲停止就不能動了
-
-        if(key=='w'){
-            man.up()
-            reward=-1
-        }else if(key=='s'){
-            man.down()
-            reward=1
-        }
-        
-
-
-        if(man.y()==550){reward=-10;end=true}
-        if(man.y()==50){reward=10;end=true}
-        updateInfo()
-        stage.batchDraw()
+        action=event.key
+        mainProcedure(action)
     })
 
     // [後端控制]
     var ws = new WebSocket("ws://localhost:4300");
-    // 
+    
     ws.onopen=function(){
         console.log('open connection')
     }
 
     ws.onmessage=function(rtn){
-        console.log(rtn.data)
-        var key=rtn.data
-        if(end==true && key==' '){
-            state='end'
-            resetGame()
-        }
-        if(end==true){return 0}
-
-        if(key=='w'){
-            man.up()
-            reward=-1
-        }else if(key=='s'){
-            man.down()
-            reward=1
-        }
-
-        if(man.y()==550){reward=-10;end=true;state="end"}
-        if(man.y()==50){reward=10;end=true;state="end"}
-        // console.log('sned')
-        // setTimeout(function(){console.log(end,state);ws.send(state)},50)
+        action=rtn.data
+        console.log(action)
+        mainProcedure()
         ws.send(state)
-        updateInfo()
-        stage.batchDraw()
-
     }
     
 

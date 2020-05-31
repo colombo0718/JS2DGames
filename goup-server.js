@@ -13,7 +13,7 @@ ws.on('connection', ws => {
         console.log(data)
         if(data=="end"){
             console.log('aaaa')
-            setTimeout(function(){ws.send(' ')},500)
+            setTimeout(function(){ws.send('x')},500)
             // ws.send(' ')
             return 0
             // setTimeout(function(){ws.send(' ')},500)
