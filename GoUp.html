@@ -29,11 +29,11 @@
     action:<text id='act'></text><br>
     reward:<text id='rew'>0</text><br>
     score:<text id='sco'>0</text><br>
-    end:<text id='end'>false</text>
+    phase:<text id='pha'>end</text>
 </div>
 <div id="ctrl">
     [Control]<br>
-    <input type="button" value="start" onclick="ws.send('');resetGame()"></input>
+    <input type="button" value="start" onclick="ws.send('<0>,(0,0)');resetGame()"></input>
 </div>
 <script>
     // [景物建置]
@@ -110,49 +110,51 @@
     stage.add(layer);
 
     // [遊戲機制]
-    var state=0,action,reward=0,score=0
+    var state=0,action='',reward=0,score=0,phase='end'
 
     man.height=function(){
         return -1*(man.y()-300)/50
     }
-
+    // 遊戲主流程
     var mainProcedure=function(){
         reward=0
         if( action=='x'){
-            // state='end'
             resetGame()
         }
-        if(state=='end'){return 0}
+        if(phase=='end'){return 0}
 
         if(action=='w'){
             man.y(man.y()-50)
             reward=-1
+            // reward=0
         }else if(action=='s'){
             man.y(man.y()+50)
             reward=1
+            // reward=0
         }
         score+=reward
         state=man.height()
-        if(man.y()==550){reward=-10;state="end"}
-        if(man.y()==50){reward=10;state="end"}
+        if(man.y()==550){reward=-100;phase='end'}
+        if(man.y()==50){reward=100;phase='end'}
         stage.batchDraw()
         updateInfo()
     }
-
+    // 更新版面訊息
     var updateInfo = function(){
         document.getElementById('sta').innerHTML=state
         document.getElementById('act').innerHTML=action
         document.getElementById('rew').innerHTML=reward
         document.getElementById('sco').innerHTML=score
-        document.getElementById('end').innerHTML=end
+        document.getElementById('pha').innerHTML=phase
     }
-
+    // 重制遊戲
     var resetGame=function(){
         score=0
         state=0
+        phase='run'
         man.y(300)
     }
-
+    // 取得按鍵輸入
     document.addEventListener('keydown',function(event){
         action=event.key
         mainProcedure(action)
@@ -167,9 +169,8 @@
 
     ws.onmessage=function(rtn){
         action=rtn.data
-        console.log(action)
         mainProcedure()
-        ws.send(state)
+        ws.send("<"+reward+">,("+state+",0),{"+phase+"}")
     }
     
 

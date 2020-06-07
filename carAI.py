@@ -59,13 +59,10 @@ def message_back(client, server, message):
 
     print("return "+action)
     print('-------------------------')
-
     # sent action signal to client 
     server.send_message(client,action)
-
     state=stateNew
     
-
 server = WebsocketServer(4300, host='', loglevel=logging.INFO)
 server.set_fn_message_received(message_back)
 server.run_forever()
