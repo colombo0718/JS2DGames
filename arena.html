@@ -1,0 +1,325 @@
+<html>
+<head>
+  <script src="https://cdn.rawgit.com/konvajs/konva/1.6.5/konva.js"></script>
+  <meta charset="utf-8">
+  <title>Code Of Strategy</title>
+  <link rel="Shortcut Icon" type="image/x-icon" href="warrior.png">
+   <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #F0F0F0;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+    var CoS={
+        soldier:function(config){
+            var shape = new Konva.Group({
+                x: config.x,
+                y: config.y,
+                rotation: 0
+            });
+
+            var face = new Konva.Circle({
+                x: 0,
+                y: 0,
+                radius: 5,
+                fill: 'pink',
+                stroke: 'black',
+                strokeWidth: 0.5
+            });
+
+            var helmet = new Konva.Wedge({
+                x: 0,
+                y: 0,
+                radius: 5,
+                angle: 240,
+                fill: '#0ff',
+                stroke: 'black',
+                strokeWidth: .5,
+                rotation: 60
+            });
+
+            var shield = new Konva.Line({
+                points: [7,3,  9,3, 9,-3,  7,-3],
+                fill: 'chocolate',
+                stroke: 'black',
+                strokeWidth: .5,
+                closed : true,
+                rotationDeg: -75
+            });
+
+            // var sword = new Konva.Line({
+            //     points: [7,0,  11,-1, 15,0,  11,+1],
+            //     fill: '#999',
+            //     stroke: 'black',
+            //     strokeWidth: .5,
+            //     closed : true,
+            //     rotation: -90
+            // });
+            var sword = new Konva.Line({
+                points: [0,-1, 1,0, 0,1, -1,0],
+                // points: [0,-10, 1,-15, 0,-20, -1,-15],
+                fill: '#999',
+                stroke: 'black',
+                strokeWidth: .5,
+                closed : true,
+                scaleX : 2,
+                x : 9
+            });
+
+            var wield = new Konva.Arc({
+                innerRadius:  15,
+                outerRadius: 16,
+                angle: 150,
+                fill: '#faa',
+                stroke: '#f00',
+                strokeWidth: .1 ,
+                rotation: -150,
+                visible:false
+            })
+
+            shape.add(face)
+            shape.add(helmet)
+            shape.add(shield)
+            shape.add(wield)
+            shape.add(sword)
+
+
+
+            var prope={
+                speed:50,
+                angSp:180,
+                blood:20
+            }
+
+            var actio={
+                move:0,
+                rote:0,
+                swip:300,
+                chop:200
+            }
+
+            var funcs={
+                move:function(set){actio.move=set},
+                rote:function(set){actio.rote=set},
+                // swip:function(set){if(actio.swip=300){actio.swip=0}},
+                chop:function(set){if(actio.chop==200){actio.chop=0}}
+            }
+
+            var opera=function(){
+                if(actio.move==1){
+                    var diam=shape.attrs.rotation*Math.PI/180
+                    shape.move({
+                        x:Math.cos(diam)*prope.speed/100,
+                        y:Math.sin(diam)*prope.speed/100
+                    })
+                }
+                if(actio.move==-1){
+                    var diam=shape.attrs.rotation*Math.PI/180
+                    shape.move({
+                        x:-0.5*Math.cos(diam)*prope.speed/100,
+                        y:-0.5*Math.sin(diam)*prope.speed/100
+                    })
+                }
+
+                if(actio.rote!=0){shape.rotate(actio.rote*prope.angSp/100)}
+
+                // if(actio.swip<300){
+                //     actio.swip+=1
+                //     if(actio.swip<20){sword.rotate(-60./20)}
+                //     else if(actio.swip<30){
+                //         sword.rotate(150./10)
+                //         wield.visible(true)
+                //     }
+                //     else if(actio.swip<100){
+                //         sword.rotate(-90./70)
+                //         wield.visible(false)
+                //     }
+                //     else{sword.rotation(-90)}   
+                // }
+
+                if(actio.chop<200){
+                    actio.chop+=1
+                    if(actio.chop<20){
+                        sword.scaleX(sword.attrs.scaleX+1./20)
+                        sword.move({x:-6/20,y:0})
+                    }
+                    else if(actio.chop<30){
+                        sword.scaleX(sword.attrs.scaleX-1./10)
+                        sword.move({x:6/10,y:0})
+                    }
+                    else if(actio.chop<40){
+                        sword.scaleX(sword.attrs.scaleX+3./10)
+                        sword.move({x:6/10,y:0})
+                    }
+                    else if(actio.chop<100){
+                        sword.scaleX(sword.attrs.scaleX-3./60)
+                        sword.move({x:-6/60,y:0})
+                    }
+                    else{
+                        sword.scaleX(2),
+                        sword.x(9)
+                    }   
+                }
+            }
+
+            return {
+                shape:shape,
+                actio:actio,
+                funcs:funcs,
+                opera:opera
+            }
+        },
+        flag:[
+            ['a',0],
+            ['b',0],
+            ['c',0],
+            ['d',0],
+            ['e',0],
+            ['f',0],
+            ['g',0],
+            ['h',0],
+            ['i',0],
+            ['j',0],
+            ['k',0],
+            ['l',0],
+            ['m',0],
+            ['n',0],
+            ['o',0],
+            ['p',0],
+            ['q',0],
+            ['r',0],
+            ['s',0],
+            ['t',0],
+            ['u',0],
+            ['v',0],
+            ['w',0],
+            ['x',0],
+            ['y',0],
+            ['z',0],
+            [' ',0]],
+
+
+        sign:function(letter){
+            for(var i=0;i<27;i++){
+                if(CoS.flag[i][0]==letter){
+                    return CoS.flag[i][1] 
+                }
+            }   
+        },
+               
+        wave:function(){
+            console.log('wave')
+            document.addEventListener('keydown',function(e){
+                // console.log(e.key)
+                for(var i=0;i<27;i++){
+                    if(CoS.flag[i][0]==e.key){
+                        // console.log(i)
+
+                        CoS.flag[i][1]=1
+                        // console.log(CoS.flag[i])
+                    }
+                }
+            })
+            document.addEventListener('keyup',function(e){
+                for(var i=0;i<27;i++){
+                    if(CoS.flag[i][0]==e.key){
+                        CoS.flag[i][1]=0
+                        // console.log(CoS.flag[i])
+                    }
+                }
+            })
+        }
+    }
+
+//==================================================
+
+
+    var w1=new CoS.soldier({x:100,y:50})
+    var w2=new CoS.soldier({x:50,y:100})
+
+
+    var width = window.innerWidth;
+    var height = window.innerHeight;
+    
+    var stage = new Konva.Stage({
+        container: 'container',
+        width: width,
+        height: height
+    });
+
+    var layer1 = new Konva.Layer();
+
+
+
+    layer1.add(w2.shape)
+    layer1.add(w1.shape)
+
+    // w1.move({x:10})
+    w2.shape.rotate(180)
+
+    stage.add(layer1);
+
+    stage.scale({x: 1, y: 1})
+    stage.batchDraw();
+
+    w1.opera()
+    t=0
+
+    console.log(CoS.wave())
+    CoS.flag[0][1]=1
+    console.log(CoS.flag[0])
+    // w1.funcs.rote(1)
+    // w1.funcs.move(1)
+    // w2.funcs.move(-1)
+    // setInterval('t+=1;if(w1.actio.swip==300){w1.funcs.swip()};w1.opera();stage.batchDraw();',10)
+    // setInterval('t+=1;if(w1.actio.chop==200){w1.funcs.chop()};w1.opera();w2.opera();stage.batchDraw();',10)
+    setInterval('t+=1;w1.opera();w2.opera();stage.batchDraw();console.log(CoS.sign("a"));',10)
+    // console.log(CoS.banner().sign("a"));
+
+
+
+    document.addEventListener('keydown',function(e){
+        switch(e.key) {
+            case ' ':
+                w1.funcs.chop()
+                break;
+            case 'w':
+                w1.funcs.move(1)
+                break; 
+            case 's':
+                w1.funcs.move(-1)
+                break; 
+            case 'd':
+                w1.funcs.rote(1)
+                break; 
+            case 'a':
+                w1.funcs.rote(-1)
+                break;          
+        }
+    })
+    document.addEventListener('keyup',function(e){
+        switch(e.key) {
+            case 'w':
+                w1.funcs.move(0)
+                break;  
+            case 's':
+                w1.funcs.move(0)
+                break; 
+            case 'd':
+                w1.funcs.rote(0)
+                break; 
+            case 'a':
+                w1.funcs.rote(0)
+                break;
+        }
+    })
+
+  </script>
+</body>
+</html>
