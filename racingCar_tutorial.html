@@ -1,0 +1,79 @@
+<html>
+    <head>
+    </head>
+    <body>
+    <script src="https://unpkg.com/konva@4.0.0/konva.min.js"></script>
+    <div id="cont"></div>
+    <script>
+        // 建立舞台 
+        var stage = new Konva.Stage({
+            container: "cont",
+            width: 400,
+            height: 600
+        });
+        // 建立圖層 
+        var layer = new Konva.Layer();
+            // 建立並加入草皮
+            var turf = new Konva.Rect({
+                width: 400,
+                height: 600,
+                fill: '#0a0'
+            });
+            layer.add(turf);
+            // 建立並加入馬路
+            var road = new Konva.Rect({
+                x:50,
+                width: 300,
+                height: 600,
+                fill: '#333'
+            });
+            layer.add(road);
+            // 加入玩家的紅車
+            var redCar = new Konva.Rect({
+                x:100,
+                y:500,
+                width: 30,
+                height: 50,
+                fill: '#f00'
+            });
+            layer.add(redCar);
+            // 加入路人的藍車
+            var bluCar = new Konva.Rect({
+                x:200,
+                y:0,
+                width: 30,
+                height: 50,
+                fill: '#00f'
+            });
+            layer.add(bluCar);
+        // 舞台中加入圖層
+        stage.add(layer);
+        // 汽車橫向平移
+        var keyA,keyD
+        setInterval(function(){
+            // 控制紅車
+            if(keyD){redCar.x(redCar.x()+5)}
+            if(keyA){redCar.x(redCar.x()-5)}
+            
+            // 藍車移動
+            bluCar.y(bluCar.y()+5)
+            if(bluCar.y()>600){
+                bluCar.x(50+Math.random()*250)
+                bluCar.y(-50)
+            }
+            layer.draw()
+        },10)
+        // 按鍵按下反應
+        document.addEventListener('keydown',function(event){
+            // console.log(event)
+            if(event.key=="a"){keyA=true}   
+            if(event.key=="d"){keyD=true}   
+        })
+        document.addEventListener('keyup',function(event){
+            if(event.key=="a"){keyA=false}
+            if(event.key=="d"){keyD=false}   
+        })
+
+    </script>
+    </body>
+</html>

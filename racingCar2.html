@@ -1,43 +1,170 @@
 <html>
-    <head>
-    </head>
-    <body>
+<head>
     <script src="https://unpkg.com/konva@4.0.0/konva.min.js"></script>
-    <div id="cont"></div>
-    <script>
-        // 建立舞台 
-        var stage = new Konva.Stage({
-            container: "cont",
-            width: 400,
-            height: 600
-        });
-        // 建立圖層 
-        var layer = new Konva.Layer();
-            // 建立並加入草皮
-            var turf = new Konva.Rect({
-                width: 400,
-                height: 600,
-                fill: '#0a0'
-            });
-            layer.add(turf);
-            // 建立並加入馬路
-            var road = new Konva.Rect({
-                x:50,
-                width: 300,
-                height: 600,
-                fill: '#333'
-            });
-            layer.add(road);
-            // 建立並加入汽車
-            var car = new Konva.Rect({
-                x:100,
-                y:500,
-                width: 30,
-                height: 50,
-                fill: '#f00'
-            });
-        // 舞台中加入圖層
-        stage.add(layer);
-    </script>
-    </body>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <style>
+    #cont{
+        position: absolute;
+        top:0px;left:0px;
+        height:600px; width: 400px;
+    }
+    #info{
+        font-size: 20;
+        font-family:monospace;
+        position: absolute;
+        top:0px;left:400px;
+        height: 600px; width: 250px;
+    }
+    #ctrl{
+        font-size: 20;
+        font-family:monospace;
+        position: absolute;
+        top:0px;left:650px;
+        height: 600px; width: 150px;
+    }
+    </style>
+</head>
+<body>
+<div id="cont"></div>
+<div id="info"> 
+    [Infomation]<br>
+    state:<text id='sta'>0</text><br>
+    action:<text id='act'></text><br>
+    reward:<text id='rew'>0</text><br>
+    score:<text id='sco'>0</text><br>
+    phase:<text id='pha'>end</text>
+</div> 
+<div id="ctrl">
+    [Control]<br>
+    <input type="button" value="start" onclick="resetGame();ws.send('<0>,(0,0,0,0)')"></input>
+</div>
+<script>
+    // 建立舞台
+    var stage = new Konva.Stage({
+        container: 'cont',
+        width: 400,
+        height: 600
+    });
+    // 建立圖層
+    var layer = new Konva.Layer();
+    // 建立並加入草皮
+    var turf = new Konva.Rect({
+        width: 400,
+        height: 600,
+        fill: '#0a0'
+    });
+    layer.add(turf);
+    // 建立並加入馬路
+    var road = new Konva.Rect({
+        x:50,
+        width: 300,
+        height: 600,
+        fill: '#333'
+    });
+    layer.add(road);
+    // 加入玩家的紅車車
+    var redCar = new Konva.Rect({
+        x:200,
+        y:500,
+        width: 30,
+        height: 50,
+        fill: '#f00'
+    });
+    layer.add(redCar);
+    // 加入路人的藍車
+    var bluCar = new Konva.Rect({
+        x:200,
+        y:0,
+        width: 30,
+        height: 50,
+        fill: '#00f'
+    });
+    layer.add(bluCar);
+    // 舞台中加入圖層
+    stage.add(layer);
+    // [遊戲機制]
+    var state='0,0,0',action,reward=0,score=0,phase='end'
+    var gress=0,collision=0,pass=0
+    // 遊戲主流程
+    setInterval(function(){
+        reward=0
+        if(action=='x'){
+            resetGame()
+        }
+        if(phase=='end'){return 0}
+
+        // 紅車左右移動
+        if(action=='d'){redCar.x(redCar.x()+5)}
+        if(action=='a'){redCar.x(redCar.x()-5)}
+
+        // 藍車往下移動
+        bluCar.y(bluCar.y()+5)
+        reward=0.01
+        // pass a car 
+        if(bluCar.y()>600){
+            bluCar.x(50+Math.random()*250)
+            bluCar.y(-50)
+            pass+=1
+        }
+    
+        // 進入草皮
+        if(redCar.x()<50 || redCar.x()>320){
+            console.log('gress')
+            gress+=1
+            reward=-100
+            phase='end'
+        }
+
+        // 兩車碰撞
+        if(Math.abs(redCar.x()-bluCar.x())<30 && 
+        Math.abs(redCar.y()-bluCar.y())<50 ){
+            console.log('collision')
+            collision+=1
+            reward=-100
+            phase='end'
+        }
+        
+        // send reward and state data
+        score+=reward
+        state=redCar.x()+','+bluCar.x()+','+bluCar.y()
+        updateInfo()
+        layer.draw()
+
+    },10)
+
+    var updateInfo = function(){
+        document.getElementById('sta').innerHTML=state
+        document.getElementById('act').innerHTML=action
+        document.getElementById('rew').innerHTML=reward
+        document.getElementById('sco').innerHTML=score
+        document.getElementById('pha').innerHTML=phase
+    }
+
+    var resetGame=function(){
+        phase='run'
+        score=0
+        redCar.x(200)
+        bluCar.x(50+Math.random()*250)
+        bluCar.y(-50)
+        updateInfo()
+    }
+    // AI control
+    var ws = new WebSocket("ws://localhost:4300");
+    ws.onmessage=function(rtn){
+        console.log(rtn.data)
+        console.log(state)
+        action=rtn.data
+        ws.send("<"+reward+">,("+state+",0),{"+phase+"}")
+    }
+
+    // human control 
+    document.addEventListener('keydown',function(event){
+        action=event.key
+    })
+    document.addEventListener('keyup',function(event){
+        action=''
+    })
+
+</script>
+</body>
 </html>
