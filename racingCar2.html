@@ -13,13 +13,13 @@
         font-family:monospace;
         position: absolute;
         top:0px;left:400px;
-        height: 600px; width: 250px;
+        height: 300px; width: 250px;
     }
     #ctrl{
         font-size: 20;
         font-family:monospace;
         position: absolute;
-        top:0px;left:650px;
+        top:300px;left:400px;
         height: 600px; width: 150px;
     }
     </style>
@@ -95,11 +95,12 @@
 
         // 紅車左右移動
         if(action=='d'){redCar.x(redCar.x()+5)}
-        if(action=='a'){redCar.x(redCar.x()-5)}
-
+        else if(action=='a'){redCar.x(redCar.x()-5)}
+        else{reward=0.01}
+// reward=0.01
         // 藍車往下移動
         bluCar.y(bluCar.y()+5)
-        reward=0.01
+        
         // pass a car 
         if(bluCar.y()>600){
             bluCar.x(50+Math.random()*250)
