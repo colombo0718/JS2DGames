@@ -1,3 +1,5 @@
+const brain = require('brain')
+
 const config = {
   binaryThresh: 0.5,
   hiddenLayers: [3], // array of ints for the sizes of the hidden layers in the network
