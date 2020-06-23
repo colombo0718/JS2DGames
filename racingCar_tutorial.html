@@ -49,8 +49,20 @@
         // 舞台中加入圖層
         stage.add(layer);
         // 汽車橫向平移
-        var keyA,keyD
+
+        var keyA,keyD,endgame=false,score=0
+
+        var resetGame=function(){
+            endgame=false
+            score=0
+            redCar.x(50+Math.random()*250)
+            bluCar.x(50+Math.random()*250)
+            bluCar.y(-50)
+        }
+
         setInterval(function(){
+            if(endgame){return 0}
+
             // 控制紅車
             if(keyD){redCar.x(redCar.x()+5)}
             if(keyA){redCar.x(redCar.x()-5)}
@@ -58,16 +70,31 @@
             // 藍車移動
             bluCar.y(bluCar.y()+5)
             if(bluCar.y()>600){
+                score+=1
+                console.log(score)
                 bluCar.x(50+Math.random()*250)
                 bluCar.y(-50)
+            }
+
+            // 開進草皮
+            if(redCar.x()<50 || redCar.x()>320){
+                console.log('gress')
+                endgame=true
+            }
+
+            // 兩車碰撞
+            if(Math.abs(redCar.x()-bluCar.x())<30 && 
+                Math.abs(redCar.y()-bluCar.y())<50 ){
+                console.log('collision')
+                endgame=true
             }
             layer.draw()
         },10)
         // 按鍵按下反應
         document.addEventListener('keydown',function(event){
-            // console.log(event)
             if(event.key=="a"){keyA=true}   
-            if(event.key=="d"){keyD=true}   
+            if(event.key=="d"){keyD=true}
+            if(event.key==" " && endgame==true){resetGame()}
         })
         document.addEventListener('keyup',function(event){
             if(event.key=="a"){keyA=false}

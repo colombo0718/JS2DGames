@@ -1,3 +1,8 @@
+const brain = require('brain.js')
+const machinelearn = require('machinelearn')
+console.log(brain)
+// import { KMeans } from 'machinelearn/cluster';
+
 const config = {
   binaryThresh: 0.5,
   hiddenLayers: [3], // array of ints for the sizes of the hidden layers in the network
@@ -16,3 +21,5 @@ net.train([
 ]);
 
 const output = net.run([1, 0]); // [0.987]
+
+console.log(output)

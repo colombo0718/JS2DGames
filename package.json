@@ -1,0 +1,24 @@
+{
+  "name": "js2dgame",
+  "version": "1.0.0",
+  "description": "javascript machine learning game ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/colombo0718/JS2DGames.git"
+  },
+  "author": "colombo0718",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/colombo0718/JS2DGames/issues"
+  },
+  "homepage": "https://github.com/colombo0718/JS2DGames#readme",
+  "dependencies": {
+    "brain": "^1.0.0",
+    "brain.js": "^2.0.0-beta.1",
+    "machinelearn": "^2.1.5"
+  }
+}
