@@ -1,7 +1,13 @@
 {
+<<<<<<< HEAD
   "name": "js2dgame",
   "version": "1.0.0",
   "description": "javascript machine learning game ",
+=======
+  "name": "js2dgames",
+  "version": "1.0.0",
+  "description": "AI play javascript konva game ",
+>>>>>>> 6fb34eacc950a2a5bed443069c3d7643c2fd5970
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,7 +16,11 @@
     "type": "git",
     "url": "git+https://github.com/colombo0718/JS2DGames.git"
   },
+<<<<<<< HEAD
   "author": "colombo0718",
+=======
+  "author": "",
+>>>>>>> 6fb34eacc950a2a5bed443069c3d7643c2fd5970
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/colombo0718/JS2DGames/issues"
@@ -18,7 +28,12 @@
   "homepage": "https://github.com/colombo0718/JS2DGames#readme",
   "dependencies": {
     "brain": "^1.0.0",
+<<<<<<< HEAD
     "brain.js": "^2.0.0-beta.1",
     "machinelearn": "^2.1.5"
+=======
+    "gpu": "^1.0.0",
+    "mathjs": "^7.0.1"
+>>>>>>> 6fb34eacc950a2a5bed443069c3d7643c2fd5970
   }
 }

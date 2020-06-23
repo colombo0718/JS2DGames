@@ -99,7 +99,7 @@
         else{reward=0.01}
 // reward=0.01
         // 藍車往下移動
-        bluCar.y(bluCar.y()+5)
+        // bluCar.y(bluCar.y()+5)
         
         // pass a car 
         if(bluCar.y()>600){
@@ -149,6 +149,7 @@
         bluCar.y(-50)
         updateInfo()
     }
+
     // AI control
     var ws = new WebSocket("ws://localhost:4300");
     ws.onmessage=function(rtn){

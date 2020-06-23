@@ -1,7 +1,11 @@
+<<<<<<< HEAD
 const brain = require('brain.js')
 const machinelearn = require('machinelearn')
 console.log(brain)
 // import { KMeans } from 'machinelearn/cluster';
+=======
+const brain = require('brain')
+>>>>>>> 6fb34eacc950a2a5bed443069c3d7643c2fd5970
 
 const config = {
   binaryThresh: 0.5,
