@@ -28,8 +28,8 @@ function layer(){
     this.ouput_grad=undefined
 
     this.connect=function(layer){
-        this.prev=layer
-        layer.next=this
+        this.next=layer
+        layer.prev=this
     }
 
     this.forward=function(){}
@@ -72,7 +72,7 @@ function activLayer(input_leng){
         // console.log(this.input_grad)
         this.get_bacward_input()
         // console.log(this.input_grad)
-        this.ouput_grad=sigmoidPrime(this.input_data)
+        this.ouput_grad=math.dotMultiply(sigmoidPrime(this.input_data),this.input_grad)
         // console.log(this.ouput_grad)
     }
 }
@@ -112,13 +112,13 @@ function denseLayer(input_leng,ouput_leng){
 
 var a=new denseLayer(2,3)
 var b=new activLayer(3)
-b.connect(a)
+a.connect(b)
 a.input_data=[1,2]
 a.forward()
 console.log(a.ouput_data)
 b.forward()
 console.log(b.ouput_data)
-b.input_grad=[1,1,1]
+b.input_grad=[3,1,1]
 // b.ouput_grad=[2,2,2]
 a.weig=[[2,3,4],[4,3,2]]
 b.bacward()
