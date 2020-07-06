@@ -89,6 +89,7 @@ function denseLayer(input_leng,ouput_leng){
     this.ouput_dim=ouput_leng
 
     this.weig=math.zeros(this.input_dim,this.ouput_dim)
+    console.log(this.weig)
     this.bias=math.zeros(this.ouput_dim)
 
     this.forward=function(){
@@ -124,8 +125,8 @@ b.bacward()
 console.log(b.ouput_grad)
 a.bacward()
 // a.describe()
-console.log(a.ouput_grad)
+console.log(a.ouput_grad,a.weig,a.weig_grad)
 
 c=[[1],[2],[3]]
 d=[[4],[5],[6]]
-// console.log(c,math.transpose(d),math.multiply(c,math.transpose(d)))
+console.log(c,math.transpose(d),math.multiply(c,math.transpose(d)))
