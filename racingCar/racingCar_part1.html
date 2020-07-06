@@ -20,7 +20,7 @@
         font-family:monospace;
         position: absolute;
         top:300px;left:400px;
-        height: 600px; width: 150px;
+        height: 300px; width: 250px;
     }
     </style>
 </head>
@@ -36,7 +36,7 @@
 </div> 
 <div id="ctrl">
     [Control]<br>
-    <input type="button" value="start" onclick="resetGame();ws.send('<0>,(0,0,0,0)')"></input>
+    <input type="button" value="start" onclick="resetGame()"></input>
 </div>
 <script>
     // 建立舞台
@@ -86,14 +86,13 @@
     stage.add(layer);
     // [遊戲機制]
     var state='0,0,0',action,reward=0,score=0,phase='end'
-    var gress=0,collision=0,pass=0
     // 遊戲主流程
     setInterval(function(){
         reward=0
-        if(action=='x'){
-            resetGame()
-        }
-        if(phase=='end'){return 0}
+        // if(action=='x'){
+        //     resetGame()
+        // }
+        // if(phase=='end'){return 0}
 
         // 紅車左右移動
         if(action=='d'){redCar.x(redCar.x()+3)}
@@ -105,27 +104,27 @@
         
         // pass a car 
         if(bluCar.y()>600){
+            console.log('pass')
             bluCar.x(65+Math.random()*270)
             bluCar.y(-50)
-            pass+=1
         }
     
-        // 進入草皮
-        if(redCar.x()<65 || redCar.x()>335){
-            console.log('gress')
-            gress+=1
-            reward=-100
-            phase='end'
-        }
+        // // 進入草皮
+        // if(redCar.x()<65 || redCar.x()>335){
+        //     console.log('gress')
+        //     gress+=1
+        //     reward=-100
+        //     phase='end'
+        // }
 
-        // 兩車碰撞
-        if(Math.abs(redCar.x()-bluCar.x())<30 && 
-        Math.abs(redCar.y()-bluCar.y())<50 ){
-            console.log('collision')
-            collision+=1
-            reward=-100
-            phase='end'
-        }
+        // // 兩車碰撞
+        // if(Math.abs(redCar.x()-bluCar.x())<30 && 
+        // Math.abs(redCar.y()-bluCar.y())<50 ){
+        //     console.log('collision')
+        //     collision+=1
+        //     reward=-100
+        //     phase='end'
+        // }
         
         // send reward and state data
         score+=reward
@@ -143,30 +142,21 @@
         document.getElementById('pha').innerHTML=phase
     }
 
-    var resetGame=function(){
-        phase='run'
-        score=0
-        redCar.x(200)
-        bluCar.x(65+Math.random()*270)
-        bluCar.y(-50)
-        updateInfo()
-    }
-
-    // AI control
-    var ws = new WebSocket("ws://localhost:4300");
-    ws.onmessage=function(rtn){
-        console.log(rtn.data)
-        console.log(state)
-        action=rtn.data
-        ws.send("<"+reward+">,("+state+",0),{"+phase+"}")
-    }
+    // var resetGame=function(){
+    //     phase='run'
+    //     score=0
+    //     redCar.x(200)
+    //     bluCar.x(65+Math.random()*270)
+    //     bluCar.y(-50)
+    //     updateInfo()
+    // }
 
     // human control 
     document.addEventListener('keydown',function(event){
         action=event.key
     })
     document.addEventListener('keyup',function(event){
-        action=''
+        action='s'
     })
 
 </script>

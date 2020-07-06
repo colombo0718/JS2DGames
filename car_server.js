@@ -18,32 +18,49 @@ ws.on('connection', ws => {
         stateNew=(data.split('(')[1]+'').split(')')[0]
         var phase=(data.split('{')[1]+'').split('}')[0]
 
-        input= stateNew.split(',').slice(0,-1)
-        w1=[[1,1,1,1],
-            [0,0,0,0],
-            [0,0,0,0]]
-        b1=[-50,-150,-250,-320]
-        // console.log(input,w1)
-        x_w1=math.multiply(input, w1)
-        x_w1_b1=math.add(x_w1,b1)
-        // z1=sigmoid_vector(x_w1_b1)
-        z1=tanH_vector(x_w1_b1)
-        w2=[[ 1, 0, 0],
-            [-1, 1, 0],
-            [ 0,-1, 1],
-            [ 0, 0,-1]]
-        b2=[0,0,0]
-        z1_w2=math.multiply(z1, w2)
-        z1_w2_b2=math.add(z1_w2,b2)
-        z2=tanH_vector(z1_w2_b2)
+        x0= stateNew.split(',').slice(0,-1)
+
+        w1=[[1,1,0],
+            [0,0,1],
+            [0,0,0]]
+        b1=[-130,-270,-200]
+        x0_w1=math.multiply(x0, w1)
+        x0_w1_b1=math.add(x0_w1,b1)
+        x1=tanH_vector(x0_w1_b1)
+
+        w2=[[-1, 1, 1, 1],
+            [-1,-1,-1, 1],
+            [ 0,-1, 1, 0]]
+            // [ 0,-.1, .1, 0]]
+            
+        b2=[-0,-0,-0,-0]
+        // b2=[-1,-1,-1,-1]    
+
+        x1_w2=math.multiply(x1, w2)
+        x1_w2_b2=math.add(x1_w2,b2)
+        console.log(x1_w2_b2)
+        x2=tanH_vector(x1_w2_b2)
+        // x2=sigmoid_vector(x1_w2_b2)
+        // console.log(x0,x1,x1_w2_b2,x2)
+
         w3=[[0,0,1],
+<<<<<<< HEAD
             [0,1,0],
+=======
+            [0,0,1],
+            [1,0,0],
+>>>>>>> ac7ec08904909a731fa6a312f99608529d578990
             [1,0,0]]
+        b3=[1,1,1]
+        // b3=[0,0,0]
         // console.log(x_w1_b1,sigmoid_vector(x_w1_b1))
-        z3=math.multiply(z2, w3)
-        // console.log(z1,z2,z3,maxIndexs(z3))
-        console.log(z1,z2,z3)
-        midx=maxIndexs(z3)
+        x2_w3=math.multiply(x2, w3)
+        x2_w3_b3=math.add(x2_w3,b3)
+        x3=tanH_vector(x2_w3_b3)
+        // console.log(x0,x1,x2,x3)
+        console.log(print(x0),print(x1),print(x2),print(x3))
+        midx=maxIndexs(x3)
+
         // if(Math.random()>epsilon){
             // a=Math.floor(Math.random()*actions.length)
         // }else{
@@ -63,15 +80,11 @@ ws.on('connection', ws => {
 var maxIndexs=function(arr){
     var midx=[]
     var max=Math.max.apply(null,arr)
-    // console.log(arr,max,arr.length)
     for(var i=0;i<arr.length;i++){
-        // console.log(i)
         if(arr[i]==max){
             midx.push(i)
-            // console.log('add')
         }
     }
-    // console.log(midx)
     return midx
 }
 
@@ -99,4 +112,10 @@ function sigmoid_vector(array){
         sv[i]= sigmoid(array[i])
     }
     return sv
+}
+
+// ---------------------
+function print(value) {
+    const precision = 3
+    return math.format(value, precision)
 }
