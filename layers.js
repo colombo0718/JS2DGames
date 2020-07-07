@@ -110,23 +110,28 @@ function denseLayer(input_leng,ouput_leng){
     }
 }
 
-var a=new denseLayer(2,3)
-var b=new activLayer(3)
-a.connect(b)
-a.input_data=[1,2]
-a.forward()
-console.log(a.ouput_data)
-b.forward()
-console.log(b.ouput_data)
-b.input_grad=[3,1,1]
+// var a=new denseLayer(2,3)
+// var b=new activLayer(3)
+// a.connect(b)
+// a.input_data=[1,2]
+// a.forward()
+// console.log(a.ouput_data)
+// b.forward()
+// console.log(b.ouput_data)
+// b.input_grad=[3,1,1]
 // b.ouput_grad=[2,2,2]
-a.weig=[[2,3,4],[4,3,2]]
-b.bacward()
-console.log(b.ouput_grad)
-a.bacward()
+// a.weig=[[2,3,4],[4,3,2]]
+// b.bacward()
+// console.log(b.ouput_grad)
+// a.bacward()
 // a.describe()
-console.log(a.ouput_grad,a.weig,a.weig_grad)
+// console.log(a.ouput_grad,a.weig,a.weig_grad)
 
 c=[[1],[2],[3]]
 d=[[4],[5],[6]]
-console.log(c,math.transpose(d),math.multiply(c,math.transpose(d)))
+// console.log(c,math.transpose(d),math.multiply(c,math.transpose(d)))
+
+module.exports={
+    activLayer:activLayer,
+    denseLayer:denseLayer,
+}
