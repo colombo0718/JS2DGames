@@ -44,11 +44,13 @@ ws.on('connection', ws => {
         // console.log(x0,x1,x1_w2_b2,x2)
 
         w3=[[0,0,1],
-            [0,1,0],
+            [0,0,1],
+            [1,0,0],
             [1,0,0]]
         b3=[1,1,1]
         // b3=[0,0,0]
         // console.log(x_w1_b1,sigmoid_vector(x_w1_b1))
+        console.log(x2,w3)
         x2_w3=math.multiply(x2, w3)
         x2_w3_b3=math.add(x2_w3,b3)
         x3=tanH_vector(x2_w3_b3)
