@@ -85,6 +85,9 @@ function denseLayer(input_leng,ouput_leng){
     this.weig=math.zeros(this.input_leng,this.ouput_leng)
     this.bias=math.zeros(this.ouput_leng)
 
+    this.weig=math.random([this.input_leng,this.ouput_leng])  
+    this.bias=math.random([this.ouput_leng])
+
     this.weig_grad=math.zeros([this.input_leng,this.ouput_leng])
     this.bias_grad=math.zeros([this.ouput_leng])
 
@@ -107,7 +110,7 @@ function denseLayer(input_leng,ouput_leng){
     }
 
     this.update_params=function(rate){
-        // console.log(this.weig,this.weig_grad)
+        // console.log(this.weig,rate,this.weig_grad)
         // console.log('aaaa')
         this.weig=math.subtract(this.weig,math.multiply(rate,this.weig_grad))
         this.bias=math.subtract(this.bias,math.multiply(rate,this.bias_grad))
