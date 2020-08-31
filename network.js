@@ -5,7 +5,7 @@ function MSE(){
     this.loss_function=function(predic,lables){
         diff=math.add(predic,math.multiply(-1,lables))
         // console.log(diff,math.multiply(diff,diff))
-        return math.multiply(1,math.multiply(diff,diff))
+        return math.multiply(.5,math.multiply(diff,diff))
     }
 
     this.loss_gradient=function(predic,lables){
@@ -35,16 +35,33 @@ function sequentialNetwork(){
 
     this.train=function(train_datas,epochs,learning_rate,test_datas=undefined){
         console.log('start training')
+        var total_loss=0
         // console.log(test_data)
         var len=train_datas.length
         for(var i=0;i<epochs;i++){
             for(var j=0;j<len;j++){
                 // console.log(i,j)
                 this.forward_bacward(train_datas[j])
+                // console.log(this.layers[2].)
+                total_loss+=this.loss.loss_function(this.layers[2].ouput_data,train_datas[j][1])
             }
             this.update(learning_rate)
             // console.log(this.layers[2].weig,this.layers[2].weig_grad)
+            if(i%100==0){
+                console.log(i,total_loss/len)
+            }
+            total_loss=0
         }
+    }
+
+    this.test=function(input,target){
+        console.log(input)
+        this.layers[0].input_data=input
+        var len=this.layers.length
+        for(var i=0;i<len;i++){
+            this.layers[i].forward()
+        }
+        console.log(this.layers[2].ouput_data,target)
     }
 
     this.forward_bacward=function(train_data){
@@ -54,6 +71,7 @@ function sequentialNetwork(){
         for(var i=0;i<len;i++){
             this.layers[i].forward()
         }
+        // console.log(this.loss.loss_function(this.layers[len-1].ouput_data,train_data[1]))
         // console.log(this.layers[len-1].ouput_data,train_data[1])
         this.layers[len-1].input_grad=this.loss.loss_gradient(this.layers[len-1].ouput_data,train_data[1])
         for(var i=len-1;i>0;i--){
@@ -68,7 +86,7 @@ function sequentialNetwork(){
             // console.log(i)
             this.layers[i].update_params(rate)
         } 
-        console.log('aaa',this.layers[2].weig._data,this.layers[2].weig_grad._data)
+        // console.log('aaa',this.layers[2].weig._data,this.layers[2].weig_grad._data)
         for(var i=0;i<len;i++){
             this.layers[i].clear_grad()
         }

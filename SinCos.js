@@ -16,9 +16,9 @@ for(var i=0;i<100;i++){
 
 
 
-a=new layers.denseLayer(1,3)
-b=new layers.activLayer(3)
-c=new layers.denseLayer(3,2)
+a=new layers.denseLayer(1,5)
+b=new layers.activLayer(5)
+c=new layers.denseLayer(5,2)
 sn=new network.sequentialNetwork()
 sn.add(a)
 sn.add(b)
@@ -29,5 +29,8 @@ sn.add(c)
 // console.log(a.weig._data,a.weig_grad,c.weig._data,c.weig_grad)
 // sn.update(.1)
 // console.log(a.weig._data,a.weig_grad._data,c.weig._data,c.weig_grad._data)
-sn.train(train_datas,1000,.001)
-console.log(a.weig._data,a.weig_grad._data,c.weig._data,c.weig_grad._data)
+sn.train(train_datas,50000,.003)
+// console.log(a.weig._data,a.weig_grad._data,c.weig._data,c.weig_grad._data)
+console.log(a.weig._data,a.bias._data,c.weig._data,c.bias._data)
+
+sn.test(train_datas[9][0],train_datas[9][1])
